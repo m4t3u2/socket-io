@@ -9,18 +9,18 @@ let users = [];
 
 // Recebe uma conexão do cliente.
 io.on("connection", (socket) => {
-  console.log("[Socket.io]: Novo usuário conectado!");
+  console.log('[Socket.io]: Novo usuário conectado!');
 
   // Adiciona o Usuário na lista e emite o getUsers() para atualizar a lista no cliente.
   socket.on("addUser", (userId) => {
-    console.log("[Socket.io]: Incluindo usuário na lista... ID: " + userId);
+    console.log('[Socket.io]: Incluindo usuário na lista... ID: ' + userId);
     addUser(userId, socket.id);
     io.emit("getUsers", users);
   });
 
   // Remove o Usuário da lista e emite o getUsers() para atualizar a lista no cliente.
   socket.on("disconnect", () => {
-    console.log("[Socket.io]: Um usuário desconectou!");
+    console.log('[Socket.io]: Um usuário desconectou!');
     removeUser(socket.id);
     io.emit("getUsers", users);
   });
@@ -28,7 +28,7 @@ io.on("connection", (socket) => {
   // Recebe uma mensagem e envia ao destinatário.
   socket.on("sendMessage", ({ senderId, receiverId, text }) => {
     const user = getUser(receiverId);
-    io.to(user.socketId).emit("getMessage", { senderId, text });
+    user ? io.to(user.socketId).emit("getMessage", { senderId, text }) : console.log('[Socket.io]: Erro ao enviar mensagem!');
   });
 });
 
